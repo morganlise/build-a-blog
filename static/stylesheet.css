@@ -1,0 +1,53 @@
+body {
+	font-family: sans-serif;
+	width: 800px;
+	margin: 0 auto;
+	padding: 10px;
+}
+
+.error {
+	color: red;
+	margin-bottom: 10px;
+}
+
+label {
+	display: block;
+	font-size: 20px;
+}
+
+input[type=text] {
+	width: 400px;
+	font-size: 20px;
+	padding: 2px;
+	margin-bottom: 20px;
+}
+
+textarea {
+	width: 400px;
+	height: 200px;
+	margin-bottom: 20px;
+	font-size: 17px;
+	font-family: monospace;
+}
+
+input[type=submit] {
+	font-size: 14px;
+}
+
+hr {
+	margin: 20px auto;
+}
+
+.posted + .posted {
+	margin-top: 20px;
+}
+
+.post-title {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.post-content {
+	margin: 0;
+	font-size: 17px;
+}
