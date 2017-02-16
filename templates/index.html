@@ -12,7 +12,7 @@
 
 		{% for BlogPost in BlogPosts %}
 			<div class="posted">
-				<div class="post-title">{{BlogPost.post_title}}</div>
+				<div class="post-title"><a href="/blog/{{BlogPost.key().id()}}">{{BlogPost.post_title}}</a></div>
 				<div class="post-content">{{BlogPost.post_content}}</div>
 
 			</div>

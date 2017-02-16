@@ -45,7 +45,7 @@ class Handler(webapp2.RequestHandler):
 class MainPage(Handler):
 
 	def render_index(self, error=""):
-		BlogPosts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC")
+		BlogPosts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5")
 
 		self.render("index.html", error=error, BlogPosts=BlogPosts)
 
@@ -59,7 +59,7 @@ class NewPost(Handler):
 		self.render_newpost()
 
 	def render_newpost(self, post_title="", post_content="", error=""):
-		self.render("new_post.html", post_title="", post_content="", error="")
+		self.render("new_post.html", post_title=post_title, post_content=post_content, error=error)
 
 	def post(self):
 		post_title = self.request.get("post_title")
@@ -68,14 +68,28 @@ class NewPost(Handler):
 		if post_title and post_content:
 			blog_post = BlogPost(post_title=post_title, post_content=post_content)
 			blog_post.put()
-
-			self.redirect("/blog")
+			blog_id = blog_post.key().id()
+			self.redirect("/blog/" + str(blog_id))
 		else:
 			error = "A blog post requires both a title and content."
-			self.render_index(post_title, post_content, error)
+			self.render_newpost(post_title, post_content, error)
+
+class ViewPostHandler(Handler):
+
+	def render_blog_post(self, post_title="", post_content="", error=""):
+		self.render("blog_post.html", post_title=post_title, post_content=post_content, error=error)
+
+	def get(self, id):
+		post = BlogPost.get_by_id(int(id))
+		if not post:
+			error = "That is not a blog post."
+			self.render_blog_post(error=error)
+		else:
+			self.render_blog_post(post_title=post.post_title, post_content=post.post_content)
 
 # Paths
 app = webapp2.WSGIApplication([
 	('/blog', MainPage),
-	('/newpost', NewPost)
+	('/newpost', NewPost),
+	(webapp2.Route('/blog/<id:\d+>', ViewPostHandler))
 ], debug=True)
