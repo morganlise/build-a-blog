@@ -23,15 +23,19 @@ from google.appengine.ext import db
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
 
+#########################
+
 # Create database
 class BlogPost(db.Model):
 	post_title = db.StringProperty(required = True)
 	post_content = db.TextProperty(required = True)
 	created = db.DateTimeProperty(auto_now_add = True)
 
+#########################
 
 # Create main handler
 class Handler(webapp2.RequestHandler):
+
 	def write(self, *a, **kw):
 		self.response.out.write(*a, **kw)
 
@@ -42,16 +46,19 @@ class Handler(webapp2.RequestHandler):
 	def render (self, template, **kw):
 		self.write(self.render_str(template, **kw))
 
+#########################
+
 class MainPage(Handler):
 
-	def render_index(self, error=""):
+	def render_index(self):
 		BlogPosts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5")
 
-		self.render("index.html", error=error, BlogPosts=BlogPosts)
+		self.render("index.html", BlogPosts=BlogPosts)
 
 	def get(self):
 		self.render_index()
 
+#########################
 
 class NewPost(Handler):
 
@@ -74,6 +81,8 @@ class NewPost(Handler):
 			error = "A blog post requires both a title and content."
 			self.render_newpost(post_title, post_content, error)
 
+#########################
+
 class ViewPostHandler(Handler):
 
 	def render_blog_post(self, post_title="", post_content="", error=""):
@@ -87,9 +96,10 @@ class ViewPostHandler(Handler):
 		else:
 			self.render_blog_post(post_title=post.post_title, post_content=post.post_content)
 
+#########################
 # Paths
 app = webapp2.WSGIApplication([
 	('/blog', MainPage),
-	('/newpost', NewPost),
+	('/blog/newpost', NewPost),
 	(webapp2.Route('/blog/<id:\d+>', ViewPostHandler))
 ], debug=True)
