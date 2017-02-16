@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>It Comes In Pints? I'm Getting One</title>
+	<link rel="stylesheet" type="text/css" href="static/stylesheet.css"/>
+	</head>
+
+	<body>
+		<h1>Pubs and Pints In London</h1>
+
+		<form method="post">
+			<label>
+				<div>Title</div>
+				<input type="text" name="post_title" value="{{post_title}}">
+			</label>
+			<label>
+				<div>Content</div>
+				<textarea name="post_content">{{post_content}}</textarea>
+			</label>
+			<div class="error">{{error}}</div>
+			<input type="submit" value="SUBMIT POST">
+		</form>
+
+	</body>
+
+</html>

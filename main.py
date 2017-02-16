@@ -44,14 +44,22 @@ class Handler(webapp2.RequestHandler):
 
 class MainPage(Handler):
 
-	def render_index(self, post_title="", post_content="", error=""):
+	def render_index(self, error=""):
 		BlogPosts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC")
 
-		self.render("index.html", post_title=post_title,
-			post_content=post_content, error=error, BlogPosts=BlogPosts)
+		self.render("index.html", error=error, BlogPosts=BlogPosts)
 
 	def get(self):
 		self.render_index()
+
+
+class NewPost(Handler):
+
+	def get(self):
+		self.render_newpost()
+
+	def render_newpost(self, post_title="", post_content="", error=""):
+		self.render("new_post.html", post_title="", post_content="", error="")
 
 	def post(self):
 		post_title = self.request.get("post_title")
@@ -61,12 +69,13 @@ class MainPage(Handler):
 			blog_post = BlogPost(post_title=post_title, post_content=post_content)
 			blog_post.put()
 
-			self.redirect("/")
+			self.redirect("/blog")
 		else:
 			error = "A blog post requires both a title and content."
 			self.render_index(post_title, post_content, error)
 
 # Paths
 app = webapp2.WSGIApplication([
-    ('/', MainPage)
+	('/blog', MainPage),
+	('/newpost', NewPost)
 ], debug=True)
